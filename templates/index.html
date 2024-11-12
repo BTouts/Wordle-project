@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wordle Clone</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <h1>Wordle Clone</h1>
+    <input
+      type="text"
+      id="wordInput"
+      maxlength="5"
+      placeholder="Enter a 5-letter word"
+      autofocus
+    />
+    <button id="submitBtn">Submit</button>
+    <div id="result"></div>
+    <div id="hiddenWord">Current Word: -----</div>
+
+    <script>
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", function () {
+          const guess = document.getElementById("wordInput").value;
+
+          fetch("/guess", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ guess: guess }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("result").innerText = data.correct
+                ? "Correct!"
+                : "Try Again!";
+              document.getElementById("hiddenWord").innerText =
+                "Current Word: " + data.hidden;
+            });
+        });
+    </script>
+  </body>
+</html>
