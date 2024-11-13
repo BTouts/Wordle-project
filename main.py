@@ -21,15 +21,19 @@ def index():
     session['secret_word'] = random.choice(word_list).lower()
     session['hidden'] = list("-----")
     session['count'] = 0
+    session['guesses'] = []
     return render_template('index.html')
 
 @app.route('/guess', methods=['POST'])
 def guess():
     user_guess = request.json['guess'].lower()
     secret_word = session['secret_word']
+    print(secret_word)
     hidden = session['hidden']
     count = session['count']
-    
+    guesses = session['guesses']
+    guesses.append(user_guess)
+    print(guesses)
     result = {}
     if user_guess == secret_word:
         result = {"correct": True}
@@ -45,6 +49,7 @@ def guess():
     session['hidden'] = hidden
     session['count'] = count
     result['hidden'] = ''.join(hidden)
+    result['guesses'] = guesses
     result['correct'] = False  # Default to incorrect, unless guessed word matches
 
     # Check if word is fully guessed

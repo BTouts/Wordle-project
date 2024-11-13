@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Wordle Clone</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
     <h1>Wordle Clone</h1>
@@ -16,7 +16,8 @@
     />
     <button id="submitBtn">Submit</button>
     <div id="result"></div>
-    <div id="hiddenWord">Current Word: -----</div>
+    <div id="hiddenWord"></div>
+    <!-- Empty at first, will be populated by JavaScript -->
 
     <script>
       document
@@ -36,8 +37,25 @@
               document.getElementById("result").innerText = data.correct
                 ? "Correct!"
                 : "Try Again!";
-              document.getElementById("hiddenWord").innerText =
-                "Current Word: " + data.hidden;
+
+              // Updating the hidden word representation with squares
+              const hiddenWordContainer = document.getElementById("hiddenWord");
+              hiddenWordContainer.innerHTML = ""; // Clear previous word
+
+              for (const guess of data.guesses) {
+                const row = document.createElement("div"); // Create a new div for the row
+                row.className = "row"; // Add the 'row' class
+
+                for (const letter of guess) {
+                  // Loop through each letter of the current guess
+                  const square = document.createElement("div"); // Create a div for each letter
+                  square.className = "square"; // Apply the 'square' class
+                  square.innerText = letter.toUpperCase(); // Display letter in uppercase
+                  row.appendChild(square); // Append square to the current row
+                }
+
+                hiddenWordContainer.appendChild(row); // Append the complete row to the container
+              }
             });
         });
     </script>

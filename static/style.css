@@ -5,13 +5,53 @@ body {
   padding: 20px;
 }
 
+h1 {
+  font-size: 2.5em;
+}
+
 input {
   font-size: 20px;
   padding: 10px;
   width: 200px;
+  margin-bottom: 20px;
 }
 
 button {
   font-size: 20px;
   padding: 10px 15px;
+}
+
+#hiddenWord {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column; /* Change this to stack rows vertically */
+  align-items: center; /* Center-align the rows */
+}
+
+.row {
+  display: flex; /* Use flexbox for the row */
+  flex-direction: row; /* Align squares horizontally within the row */
+  justify-content: center; /* Center the row's content (squares) */
+  margin: 10px 0; /* Add margin for spacing between rows */
+}
+
+.square {
+  width: 60px; /* Width of each square */
+  height: 60px; /* Height of each square */
+  margin: 5px; /* Spacing between squares */
+  border: 2px solid #333; /* Border around each square */
+  display: flex; /* Flexbox to center the text */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  font-size: 2em; /* Font size of letter */
+  background-color: #fff; /* Background color of squares */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 1.5em;
 }
