@@ -17,13 +17,36 @@
     <button id="submitBtn">Submit</button>
     <div id="result"></div>
     <div id="hiddenWord"></div>
-    <!-- Empty at first, will be populated by JavaScript -->
+    <div id="gameOver" style="display: none">
+      <h2>Game Over!</h2>
+      <p>You have made too many incorrect guesses. Better luck next time!</p>
+      <button id="resetBtn">Play Again</button>
+    </div>
 
     <script>
+      let dailyWord = "";
+
+      // Fetch the daily word when the page loads
+      async function fetchDailyWord() {
+        const response = await fetch("/get_word");
+        const data = await response.json();
+        dailyWord = data.word; // Store the daily word
+        console.log("Today's word is:", dailyWord); // For debugging
+      }
+
       document
         .getElementById("submitBtn")
         .addEventListener("click", function () {
-          const guess = document.getElementById("wordInput").value;
+          const guess = document
+            .getElementById("wordInput")
+            .value.trim()
+            .toLowerCase();
+
+          // Validate input length
+          if (guess.length !== 5) {
+            alert("Please enter a 5-letter word.");
+            return;
+          }
 
           fetch("/guess", {
             method: "POST",
@@ -33,31 +56,37 @@
             body: JSON.stringify({ guess: guess }),
           })
             .then((response) => response.json())
-            .then((data) => {
-              document.getElementById("result").innerText = data.correct
-                ? "Correct!"
-                : "Try Again!";
+            .then((guesses) => {
+              document.getElementById("wordInput").value = "";
 
-              // Updating the hidden word representation with squares
               const hiddenWordContainer = document.getElementById("hiddenWord");
-              hiddenWordContainer.innerHTML = ""; // Clear previous word
+              hiddenWordContainer.innerHTML = ""; // Clear previous guesses
 
-              for (const guess of data.guesses) {
-                const row = document.createElement("div"); // Create a new div for the row
-                row.className = "row"; // Add the 'row' class
+              for (const guess of guesses) {
+                const row = document.createElement("div");
+                row.className = "row";
 
-                for (const letter of guess) {
-                  // Loop through each letter of the current guess
-                  const square = document.createElement("div"); // Create a div for each letter
-                  square.className = "square"; // Apply the 'square' class
-                  square.innerText = letter.toUpperCase(); // Display letter in uppercase
-                  row.appendChild(square); // Append square to the current row
+                for (const letter of guess.result) {
+                  const square = document.createElement("div");
+                  square.className = "square";
+                  square.innerText = letter.letter.toUpperCase();
+                  square.style.backgroundColor = letter.color; // Apply the color
+                  row.appendChild(square);
                 }
 
-                hiddenWordContainer.appendChild(row); // Append the complete row to the container
+                hiddenWordContainer.appendChild(row);
               }
             });
         });
+
+      document
+        .getElementById("resetBtn")
+        .addEventListener("click", function () {
+          window.location.reload();
+        });
+
+      // Fetch the word for the day on page load
+      fetchDailyWord();
     </script>
   </body>
 </html>
